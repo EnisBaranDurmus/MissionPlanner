@@ -119,6 +119,12 @@ jobs:
           msbuild -v:m -restore -t:SignAndroidPackage -p:Configuration=Release "ExtLibs\Xamarin\Xamarin.Android\Xamarin.Android.csproj"
           
           del ExtLibs\Xamarin\Xamarin.Android\bin\Release\*-Signed.apk
+          
+          $apks = Get-ChildItem -include ExtLibs\Xamarin\Xamarin.Android\bin\Release\*.apk
+          
+          ForEach($i in $apks){
+            C:\Android\android-sdk\build-tools\29.0.3\zipalign.exe 4 $i
+          }
 
       - name: Sign APK
         if: ${{ github.event_name == 'push' }}
